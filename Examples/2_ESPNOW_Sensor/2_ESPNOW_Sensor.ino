@@ -12,7 +12,7 @@
 float data1;
 float data2;
 
-FDRS_EspNow FDRS();
+FDRS_EspNow FDRS;
 
 void setup() {
   FDRS.begin(GTWY_MAC,READING_ID);

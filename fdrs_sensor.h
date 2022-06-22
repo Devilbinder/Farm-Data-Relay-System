@@ -84,11 +84,14 @@ public:
   void sleep(int seconds);
   void send();
 
-private:
+protected:
 
   uint8_t _gtwy_mac;
-  const uint16_t _espnow_size;
   uint8_t _reading_id;
+
+private:
+
+  const uint16_t _espnow_size;
   uint8_t _data_count;
   DataReading *fdrsData;
 
