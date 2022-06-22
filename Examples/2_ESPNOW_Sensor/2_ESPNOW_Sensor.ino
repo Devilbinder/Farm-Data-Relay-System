@@ -12,10 +12,10 @@
 float data1;
 float data2;
 
-FDRS_EspNow FDRS(GTWY_MAC,READING_ID);
+FDRS_EspNow FDRS;
 
 void setup() {
-  FDRS.begin();
+  FDRS.begin(GTWY_MAC,READING_ID);
 }
 void loop() {
     data1 = readHum();

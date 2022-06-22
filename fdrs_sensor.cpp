@@ -9,10 +9,8 @@ uint8_t LoRaAddress[] = {0x42, 0x00};
 uint32_t wait_time = 0;
 
 
-FDRSBase::FDRSBase(uint8_t gtwy_mac,uint8_t reading_id): 
-                _gtwy_mac(gtwy_mac),
+FDRSBase::FDRSBase(): 
                 _espnow_size(250 / sizeof(DataReading)),
-                _reading_id(reading_id),
                 _data_count(0)
 {
     fdrsData = new DataReading[_espnow_size];
@@ -22,11 +20,15 @@ FDRSBase::~FDRSBase(){
     delete[] fdrsData;
 }
 
-void FDRSBase::begin() {
+void FDRSBase::begin(uint8_t gtwy_mac,uint8_t reading_id) {
+
+  _gtwy_mac = gtwy_mac;
+  _reading_id = reading_id; 
+
 #ifdef DEBUG
     Serial.begin(115200);
 #endif
-    DBG("FDRS Sensor ID " + String(READING_ID) + " initializing...");
+    DBG("FDRS Sensor ID " + String(_reading_id) + " initializing...");
     DBG(" Gateway: " + String (_gtwy_mac, HEX));
 #ifdef POWER_CTRL
     DBG("Powering up the sensor array!");
@@ -79,19 +81,19 @@ void FDRSBase::sleep(int seconds){
 }
 
 
-FDRS_EspNow::FDRS_EspNow(uint8_t gtwy_mac,uint8_t reading_id): 
-                FDRSBase(gtwy_mac,reading_id)
+FDRS_EspNow::FDRS_EspNow(): 
+                FDRSBase()
 {
-
-    memcpy(_gatewayAddress,MAC_PREFIX,5);
-    _gatewayAddress[5] = gtwy_mac;
-
 
 }
 
 
 void FDRS_EspNow::init(void){
+  
   // Init ESP-NOW for either ESP8266 or ESP32 and set MAC address
+  
+    memcpy(_gatewayAddress,MAC_PREFIX,5);
+    _gatewayAddress[5] = _gtwy_mac;
 
     DBG("Initializing ESP-NOW!");
     WiFi.mode(WIFI_STA);
@@ -132,10 +134,9 @@ void FDRS_EspNow::transmit(DataReading *fdrsData, uint8_t _data_count){
 
 #ifdef USE_LORA
 
-FDRSLoRa::FDRSLoRa(uint8_t gtwy_mac, 
-                    uint8_t reading_id,uint8_t miso,uint8_t mosi,uint8_t sck,
+FDRSLoRa::FDRSLoRa(uint8_t miso,uint8_t mosi,uint8_t sck,
                     uint8_t ss,uint8_t rst,uint8_t dio0,uint32_t band,uint8_t sf): 
-                FDRSBase(gtwy_mac,reading_id),
+                FDRSBase(),
                      _miso(miso),
                      _mosi(mosi),
                      _sck(sck),
@@ -145,12 +146,13 @@ FDRSLoRa::FDRSLoRa(uint8_t gtwy_mac,
                     _band(band),
                      _sf(sf)
 {
-    _gatewayAddress[0] = prefix[3];
-    _gatewayAddress[1] = prefix[4];
-    _gatewayAddress[2] = gtwy_mac;
+
 }
 
 void FDRSLoRa::init(void){
+    _gatewayAddress[0] = prefix[3];
+    _gatewayAddress[1] = prefix[4];
+    _gatewayAddress[2] = _gtwy_mac;
 
     DBG("Initializing LoRa!");
     DBG(_band);
