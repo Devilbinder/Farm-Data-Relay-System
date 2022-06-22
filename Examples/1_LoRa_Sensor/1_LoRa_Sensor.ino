@@ -10,13 +10,13 @@
 #include "fdrs_sensor.h"
 #include "sensor_setup.h"
 
-FDRSLoRa FDRS(GTWY_MAC,READING_ID,MISO,MOSI,SCK,SS,RST,DIO0,BAND,SF);
+FDRSLoRa FDRS(MISO,MOSI,SCK,SS,RST,DIO0,BAND,SF);
 
 float data1;
 float data2;
 
 void setup() {
-  FDRS.begin();
+  FDRS.begin(GTWY_MAC,READING_ID);
 }
 void loop() {
   data1 = readHum();

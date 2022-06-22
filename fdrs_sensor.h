@@ -76,10 +76,10 @@ typedef struct __attribute__((packed)) DataReading {
 class FDRSBase{
 public:
 
-  FDRSBase(uint8_t gtwy_mac,uint8_t reading_id);
+  FDRSBase();
   ~FDRSBase();
 
-  void begin(void);
+  void begin(uint8_t gtwy_mac,uint8_t reading_id);
   void load(float data, uint8_t type);
   void sleep(int seconds);
   void send();
@@ -100,7 +100,7 @@ private:
 class FDRS_EspNow: public FDRSBase{
 public:
 
-  FDRS_EspNow(uint8_t gtwy_mac, uint8_t reading_id);
+  FDRS_EspNow();
 
 private:
 
@@ -113,7 +113,7 @@ private:
 class FDRSLoRa: public FDRSBase{
 public:
 
-  FDRSLoRa(uint8_t gtwy_mac, uint8_t reading_id,uint8_t miso,uint8_t mosi,uint8_t sck, uint8_t ss,uint8_t rst,uint8_t dio0,uint32_t band,uint8_t sf);
+  FDRSLoRa(uint8_t miso,uint8_t mosi,uint8_t sck, uint8_t ss,uint8_t rst,uint8_t dio0,uint32_t band,uint8_t sf);
 
 private:
 
