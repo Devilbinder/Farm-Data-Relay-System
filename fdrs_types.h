@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <string.h>
+#include <vector>
 
 typedef struct __attribute__((packed)) DataReading_t {
     float data;
@@ -15,14 +16,16 @@ typedef struct __attribute__((packed)) DataReading_t {
 typedef struct Peer_t{
 
     uint8_t peer[6];
+    std::vector<DataReading_t> buffer;
     Peer_t(){
         memset(peer,0,6);
+        buffer.clear();
     }
 
-    void _copy(uint8_t p[6]){
+    void _set_peer(uint8_t p[6]){
         memcpy(peer,p,6);
     }
-    uint8_t *_data(void){
+    uint8_t *_get_peer(void){
         return peer;
     }
 
